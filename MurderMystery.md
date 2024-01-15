@@ -1,143 +1,212 @@
-# Welcome to StackEdit!
 
-Hi! I'm your first Markdown file in **StackEdit**. If you want to learn about StackEdit, you can read me. If you want to play with Markdown, you can edit me. Once you have finished with me, you can create new files by opening the **file explorer** on the left corner of the navigation bar.
+# SQL Murder Mystery
 
+A crime has taken place and the detective needs your help. The detective gave you the crime scene report, but you somehow lost it. 
+You vaguely remember that the crime was a ​murder​ that occurred sometime on ​Jan.15, 2018​ and that it took place in ​SQL City​. 
+Start by retrieving the corresponding crime scene report from the police department’s database.
 
-# Files
+![enter image description here](https://mystery.knightlab.com/schema.png)
 
-StackEdit stores your files in your browser, which means all your files are automatically saved locally and are accessible **offline!**
+1st we will check crime_scene_report to identify which murder we should check.
 
-## Create files and folders
+    SELECT
+     *
+    FROM
+    Crime_scene_report
+    WHERE
+    date = '20180115' AND type = 'murder'AND City = 'SQL City'
 
-The file explorer is accessible using the button in left corner of the navigation bar. You can create a new file by clicking the **New file** button in the file explorer. You can also create folders by clicking the **New folder** button.
+*Security footage shows that there were 2 witnesses. The first witness lives at the last house on "Northwestern Dr". The second witness, named Annabel, lives somewhere on "Franklin Ave".*
 
-## Switch to another file
+    SELECT
+     *
+    FROM
+    	person
+    WHERE 
+      	address_street_name = 'Northwestern Dr'
+    ORDER BY              
+    	address_number DESC
+	
+id	name	license_id	address_number	address_street_name	ssn
+**14887**	Morty Schapiro	118009	4919	Northwestern Dr	111564949
 
-All your files and folders are presented as a tree in the file explorer. You can switch from one to another by clicking a file in the tree.
+We find out who is 1st witness. Last house of Northwestern Dr is Morty Schapiro ssn **111564949** license_id 118009
 
-## Rename a file
+    SELECT
+     *
+    FROM
+    	drivers_license
+    WHERE 
+      	id =118009
 
-You can rename the current file by clicking the file name in the navigation bar or by clicking the **Rename** button in the file explorer.
+id	age	height	eye_color	hair_color	gender	plate_number	car_make	car_model
+**118009**	64	84	blue	white	male	00NU00	Mercedes-Benz	E-Class
 
-## Delete a file
+    SELECT
+     *
+    FROM
+    	income
+    WHERE
+    ssn = 111564949
 
-You can delete the current file by clicking the **Remove** button in the file explorer. The file will be moved into the **Trash** folder and automatically deleted after 7 days of inactivity.
+No data returned, there is no information's about his income 
 
-## Export a file
+    SELECT
+     *
+    FROM
+    	interview
+    WHERE
+    	person_id = 148879	
 
-You can export the current file by clicking **Export to disk** in the menu. You can choose to export the file as plain Markdown, as HTML using a Handlebars template or as a PDF.
+His intreview :
 
+*I heard a gunshot and then saw a **man run** out. He had a "**Get Fit Now Gym**" bag. The membership number on the bag **started with** "**48Z**". Only gold members have those bags. The man got into a car with a plate that **included** "**H42W**".*
 
-# Synchronization
+    SELECT
+     *
+    FROM
+    	person
+    WHERE 
+      	address_street_name = 'Franklin Ave' AND name LIKE'Annabel%';
+	
+	
+	
 
-Synchronization is one of the biggest features of StackEdit. It enables you to synchronize any file in your workspace with other files stored in your **Google Drive**, your **Dropbox** and your **GitHub** accounts. This allows you to keep writing on other devices, collaborate with people you share the file with, integrate easily into your workflow... The synchronization mechanism takes place every minute in the background, downloading, merging, and uploading file modifications.
-
-There are two types of synchronization and they can complement each other:
-
-- The workspace synchronization will sync all your files, folders and settings automatically. This will allow you to fetch your workspace on any other device.
-	> To start syncing your workspace, just sign in with Google in the menu.
-
-- The file synchronization will keep one file of the workspace synced with one or multiple files in **Google Drive**, **Dropbox** or **GitHub**.
-	> Before starting to sync files, you must link an account in the **Synchronize** sub-menu.
-
-## Open a file
-
-You can open a file from **Google Drive**, **Dropbox** or **GitHub** by opening the **Synchronize** sub-menu and clicking **Open from**. Once opened in the workspace, any modification in the file will be automatically synced.
-
-## Save a file
-
-You can save any file of the workspace to **Google Drive**, **Dropbox** or **GitHub** by opening the **Synchronize** sub-menu and clicking **Save on**. Even if a file in the workspace is already synced, you can save it to another location. StackEdit can sync one file with multiple locations and accounts.
-
-## Synchronize a file
-
-Once your file is linked to a synchronized location, StackEdit will periodically synchronize it by downloading/uploading any modification. A merge will be performed if necessary and conflicts will be resolved.
-
-If you just have modified your file and you want to force syncing, click the **Synchronize now** button in the navigation bar.
-
-> **Note:** The **Synchronize now** button is disabled if you have no file to synchronize.
-
-## Manage file synchronization
-
-Since one file can be synced with multiple locations, you can list and manage synchronized locations by clicking **File synchronization** in the **Synchronize** sub-menu. This allows you to list and remove synchronized locations that are linked to your file.
-
-
-# Publication
-
-Publishing in StackEdit makes it simple for you to publish online your files. Once you're happy with a file, you can publish it to different hosting platforms like **Blogger**, **Dropbox**, **Gist**, **GitHub**, **Google Drive**, **WordPress** and **Zendesk**. With [Handlebars templates](http://handlebarsjs.com/), you have full control over what you export.
-
-> Before starting to publish, you must link an account in the **Publish** sub-menu.
-
-## Publish a File
-
-You can publish your file by opening the **Publish** sub-menu and by clicking **Publish to**. For some locations, you can choose between the following formats:
-
-- Markdown: publish the Markdown text on a website that can interpret it (**GitHub** for instance),
-- HTML: publish the file converted to HTML via a Handlebars template (on a blog for example).
-
-## Update a publication
-
-After publishing, StackEdit keeps your file linked to that publication which makes it easy for you to re-publish it. Once you have modified your file and you want to update your publication, click on the **Publish now** button in the navigation bar.
-
-> **Note:** The **Publish now** button is disabled if your file has not been published yet.
-
-## Manage file publication
-
-Since one file can be published to multiple locations, you can list and manage publish locations by clicking **File publication** in the **Publish** sub-menu. This allows you to list and remove publication locations that are linked to your file.
+id name license_id address_number address_street_name ssn 
+**16371** Annabel Miller 490173 103 Franklin Ave **318771143**
 
 
-# Markdown extensions
+Checked info from Anabell driver license 
 
-StackEdit extends the standard Markdown syntax by adding extra **Markdown extensions**, providing you with some nice features.
+    SELECT
+     *
+    FROM
+    	drivers_license
+    WHERE
+    	id = '490173'
+	
+	
+id	age	height	eye_color	hair_color	gender	plate_number	car_make	car_model
+**490173**	35	65	green	brown	female	23AM98	Toyota	Yaris
+	
 
-> **ProTip:** You can disable any **Markdown extension** in the **File properties** dialog.
+SELECT
+ *
+FROM
+	income
+WHERE
+ssn = 318771143
+
+No data about her income 
+Now checking intreview with her 
+
+    SELECT
+     *
+    FROM
+    	interview 
+    WHERE	
+    person_id = 16371  
+
+*I saw the murder happen, and I recognized the killer from my gym when I was working out last week on **January the 9th.***
+
+Checking all members with id starts with 48Z 
+
+    SELECT
+     *
+    FROM
+    get_fit_now_member AS g
+    
+    WHERE
+    id LIKE '48Z%'
+
+id	person_id	name	membership_start_date	membership_status
+48Z38	49550	Tomas Baisley	20170203	silver
+48Z7A	28819	Joe Germuska	20160305	gold
+48Z55	67318	Jeremy Bowers	20160101	gold
+one of them has no gold membership, we can pre-asumme that its not him. We will check later if needed  
+
+Now we are checking who was in gym at Jan 9th 2018 with membership ID starts with 48Z
+
+    SELECT
+     *
+    FROM
+    get_fit_now_check_in AS m
+    WHERE
+    check_in_date = 20180109 AND membership_id LIKE '48Z%'
+   We have 1 suspects 
+48Z7A AND  48Z55
+
+    SELECT
+     *
+    FROM
+    get_fit_now_check_in AS m
+    JOIN
+    get_fit_now_member AS g ON
+    m.membership_id = g.id
+    WHERE
+    check_in_date = 20180109 AND membership_id LIKE '48Z%' AND membership_status = 'gold'
+   
+Checking if both are gold membership
+They are.
+
+Now time to check plates number
+
+    SELECT
+         *
+    FROM
+    	drivers_license
+    WHERE
+    plate_number LIKE '%H42W%'
 
 
-## SmartyPants
+id	age	height	eye_color	hair_color	gender	plate_number	car_make	car_model
+183779	21	65	blue	blonde	female	H42W0X	Toyota	Prius
+423327	30	70	brown	brown	male	0H42W2	Chevrolet	Spark LS
+664760	21	71	black	black	male	4H42WR	Nissan	Altima
 
-SmartyPants converts ASCII punctuation characters into "smart" typographic punctuation HTML entities. For example:
+2 male has plates like that. Lets check who is owner of this cars 
 
-|                |ASCII                          |HTML                         |
-|----------------|-------------------------------|-----------------------------|
-|Single backticks|`'Isn't this fun?'`            |'Isn't this fun?'            |
-|Quotes          |`"Isn't this fun?"`            |"Isn't this fun?"            |
-|Dashes          |`-- is en-dash, --- is em-dash`|-- is en-dash, --- is em-dash|
+    SELECT
+        *
+    FROM
+    	person 
+    
+    WHERE
+    	license_id = '423327' OR	license_id= '664760'
+    
+We have our suspect **67318	Jeremy Bowers**
+Now interview with him 
+  
+*I was hired by a woman with a lot of money. I don't know her name but I know she's around 5'5" (65") or 5'7" (67"). She has red hair and she drives a Tesla Model S. I know that she attended the SQL Symphony Concert 3 times in December 2017.*
+With all informastions we found 3 suspects 
+
+    SELECT
+    	*
+    FROM
+    	drivers_license
+    WHERE
+    	hair_color = 'red'
+    AND
+    	gender = 'female'
+    AND
+    	car_make = 'Tesla'
+    AND 
+    	car_model = 'Model S'
 
 
-## KaTeX
+id	age	height	eye_color	hair_color	gender	plate_number	car_make	car_model
+202298	68	66	green	red	female	500123	Tesla	Model S
+291182	65	66	blue	red	female	08CM64	Tesla	Model S
+918773	48	65	black	red	female	917UU3	Tesla	Model S
 
-You can render LaTeX mathematical expressions using [KaTeX](https://khan.github.io/KaTeX/):
+Now checked who was on events from this 3 ids
 
-The *Gamma function* satisfying $\Gamma(n) = (n-1)!\quad\forall n\in\mathbb N$ is via the Euler integral
-
-$$
-\Gamma(z) = \int_0^\infty t^{z-1}e^{-t}dt\,.
-$$
-
-> You can find more information about **LaTeX** mathematical expressions [here](http://meta.math.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference).
-
-
-## UML diagrams
-
-You can render UML diagrams using [Mermaid](https://mermaidjs.github.io/). For example, this will produce a sequence diagram:
-
-```mermaid
-sequenceDiagram
-Alice ->> Bob: Hello Bob, how are you?
-Bob-->>John: How about you John?
-Bob--x Alice: I am good thanks!
-Bob-x John: I am good thanks!
-Note right of John: Bob thinks a long<br/>long time, so long<br/>that the text does<br/>not fit on a row.
-
-Bob-->Alice: Checking with John...
-Alice->John: Yes... John, how are you?
-```
-
-And this will produce a flow chart:
-
-```mermaid
-graph LR
-A[Square Rect] -- Link text --> B((Circle))
-A --> C(Round Rect)
-B --> D{Rhombus}
-C --> D
-```
+    SELECT
+    	*
+    FROM
+    	facebook_event_checkin as f
+    JOIN 
+     	person as p ON f.person_id = p.id
+    	
+    WHERE license_id = 202298 OR license_id =291182 OR license_id = 918773
+**Miranda Priestly**
